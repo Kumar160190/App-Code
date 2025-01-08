@@ -16,6 +16,20 @@ jobs:
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker push prasan12345/todo-app:$version
 
+  test:
+    docker:
+      - image: cimg/node:20.3.1
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            npm install
+      - run:
+          name: Run Tests
+          command: |
+            npm test  # Modify this if you're using another testing framework
+
   Update_manifest:
     docker:
       - image: cimg/base:2023.06
@@ -40,13 +54,14 @@ jobs:
             git commit -m "new build with imgTag build-$TAG"
             git config credential.helper 'cache --timeout=120'
             git push -q https://$GITHUB_PERSONAL_TOKEN@github.com/Kumar160190/kube-manifest.git main 
+
 workflows:
   GitOpsflow:
     jobs:
       - build_and_push
-      - Update_manifest:
+      - test:
           requires:
             - build_and_push
-      
-
-
+      - Update_manifest:
+          requires:
+            - test
