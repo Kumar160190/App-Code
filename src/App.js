@@ -87,7 +87,7 @@ class App extends Component {
                         fontWeight: "bolder",
                     }}
                 >
-                    Brillio - TODO LIST
+                    Brillio Bangalore - TODO LIST
                 </Row>
   
                 <hr />
